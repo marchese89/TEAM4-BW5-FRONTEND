@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledClienti = styled.div`
@@ -43,13 +44,19 @@ export default function Clienti() {
       {Array.isArray(clienti) ? (
         <ul className="list-group">
           {clienti.map((cliente, index) => (
-            <li key={index} className="list-group-item">
-              <p>Ragione Sociale: {cliente.ragioneSociale}</p>
-              <p>Partita IVA: {cliente.partitaIva}</p>
-              <p>Email: {cliente.email}</p>
-              <p>Fatturato Annuale: {cliente.fatturatoAnnuale}</p>
-              {/* Altri campi come necessario */}
-            </li>
+            <Link
+              to={`/area_protetta/clienti/dettagli/${cliente.id}`}
+              key={cliente.id}
+            >
+              <div>
+                <li key={index} className="list-group-item">
+                  <p>Ragione Sociale: {cliente.ragioneSociale}</p>
+                  <p>Partita IVA: {cliente.partitaIva}</p>
+                  <p>Email: {cliente.email}</p>
+                  <p>Fatturato Annuale: {cliente.fatturatoAnnuale}</p>
+                </li>
+              </div>
+            </Link>
           ))}
         </ul>
       ) : (
