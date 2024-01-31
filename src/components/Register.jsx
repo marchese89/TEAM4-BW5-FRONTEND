@@ -21,7 +21,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [nome, setNome] = useState("");
   const [cognome, setCognome] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("USER");
 
   function registraUtente() {
     fetch("http://localhost:3001/auth/register", {
