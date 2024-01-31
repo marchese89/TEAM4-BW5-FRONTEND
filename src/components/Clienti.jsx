@@ -106,6 +106,7 @@ export default function Clienti() {
             <Link
               to={`/area_protetta/clienti/dettagli/${cliente.id}`}
               key={cliente.id}
+              className="text-decoration-none"
             >
               <div>
                 <li key={index} className="list-group-item">

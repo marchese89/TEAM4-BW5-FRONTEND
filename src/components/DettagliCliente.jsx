@@ -137,7 +137,7 @@ function DettagliCliente() {
       <div className="dettaglio">Email Titolare: {cliente.emailContatto}</div>
 
       <div>
-        <Button variant="primary" className="m-2" onClick={handleShowModal}>
+        <Button variant="success" className="m-2" onClick={handleShowModal}>
           Modifica
         </Button>
         <Button variant="danger" className="m-2" onClick={handleDelete}>
