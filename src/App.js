@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import AreaProtetta from "./components/AreaProtetta";
 import Clienti from "./components/Clienti";
 import Province from "./components/Province";
+import Comuni from "./components/Comuni";
 function App() {
   return (
     <BrowserRouter>
@@ -16,6 +17,7 @@ function App() {
           <Route path="area_protetta" element={<AreaProtetta />}>
             <Route path="clienti" element={<Clienti />} />
             <Route path="province" element={<Province />} />
+            <Route path="comuni" element={<Comuni />} />
           </Route>
 
           {/* 

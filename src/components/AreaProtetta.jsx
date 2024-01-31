@@ -80,6 +80,9 @@ export default function AreaProtetta() {
             className={
               location.pathname === "/area_protetta/comuni" ? "selected" : ""
             }
+            onClick={() => {
+              navigate("./comuni");
+            }}
           >
             Comuni
           </li>
