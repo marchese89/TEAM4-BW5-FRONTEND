@@ -30,11 +30,22 @@ const StyledHeader = styled.div`
   .hidden {
     display: none;
   }
+  .logout {
+    position: absolute;
+    right: 1em;
+    top: 0.5em;
+  }
 `;
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  function logout() {
+    localStorage.removeItem("authToken");
+    navigate("/");
+  }
+
   return (
     <StyledHeader>
       <h1
@@ -65,6 +76,20 @@ export default function Header() {
           }}
         >
           Registrati
+        </span>
+      </div>
+      <div
+        className={
+          localStorage.getItem("authToken") !== null ? "logout" : "hidden"
+        }
+      >
+        <span
+          className="link"
+          onClick={() => {
+            logout();
+          }}
+        >
+          Logout
         </span>
       </div>
     </StyledHeader>
