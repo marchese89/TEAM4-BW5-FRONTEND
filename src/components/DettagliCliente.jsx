@@ -232,7 +232,6 @@ function DettagliCliente() {
                 onChange={handleInputChange}
               />
             </Form.Group>
-            {/* Aggiungi altri campi del form qui, seguendo lo stesso schema */}
           </Form>
         </Modal.Body>
         <Modal.Footer>
