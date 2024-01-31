@@ -38,7 +38,7 @@ export default function Province() {
     if (selectedFile) {
       const formData = new FormData();
       formData.append("file", selectedFile);
-      fetch(`http://localhost:3001/uploadCsv/province`, {
+      fetch(`${process.env.REACT_APP_BACKEND}/uploadCsv/province`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -69,7 +69,7 @@ export default function Province() {
   };
 
   const provinceList = (page) => {
-    fetch(`http://localhost:3001/province?page=${page}`, {
+    fetch(`${process.env.REACT_APP_BACKEND}/province?page=${page}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,

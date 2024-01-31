@@ -44,7 +44,7 @@ export default function Comuni() {
     if (selectedFile) {
       const formData = new FormData();
       formData.append("file", selectedFile);
-      fetch(`http://localhost:3001/uploadCsv/comuni`, {
+      fetch(`${process.env.REACT_APP_BACKEND}/uploadCsv/comuni`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -75,7 +75,7 @@ export default function Comuni() {
   };
 
   const comuniList = (page) => {
-    fetch(`http://localhost:3001/comuni?page=${page}`, {
+    fetch(`${process.env.REACT_APP_BACKEND}/comuni?page=${page}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
