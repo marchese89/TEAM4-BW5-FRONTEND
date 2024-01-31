@@ -57,7 +57,10 @@ export default function Header() {
       </h1>
       <div
         className={
-          location.pathname === "/" ? "login_register" : "login_register hidden"
+          location.pathname === "/" &&
+          localStorage.getItem("authToken") === null
+            ? "login_register"
+            : "login_register hidden"
         }
       >
         <span
@@ -83,6 +86,15 @@ export default function Header() {
           localStorage.getItem("authToken") !== null ? "logout" : "hidden"
         }
       >
+        <span
+          className="link"
+          onClick={() => {
+            navigate("area_protetta");
+          }}
+        >
+          Area Protetta
+        </span>
+        &nbsp; | &nbsp;
         <span
           className="link"
           onClick={() => {
