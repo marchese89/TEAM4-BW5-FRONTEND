@@ -27,11 +27,10 @@ function DettagliCliente() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:3001/cliente/${idCliente}`, {
+    fetch(`${process.env.REACT_APP_BACKEND}/cliente/${idCliente}`, {
       method: "GET",
       headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNzA2NzAyMjM2LCJleHAiOjE3MDczMDcwMzZ9.X9DQyuCcs9Ie6_Vu-ai9Q70lAA-8G8b8i8NY1bAVPwM",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         "Content-Type": "application/json",
       },
     })
@@ -58,12 +57,11 @@ function DettagliCliente() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch(`http://localhost:3001/cliente/${idCliente}`, {
+    fetch(`${process.env.REACT_APP_BACKEND}/cliente/${idCliente}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNzA2NzAyMjM2LCJleHAiOjE3MDczMDcwMzZ9.X9DQyuCcs9Ie6_Vu-ai9Q70lAA-8G8b8i8NY1bAVPwM",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
       body: JSON.stringify(clienteModificato),
     })
@@ -88,11 +86,10 @@ function DettagliCliente() {
       "Sei sicuro di voler eliminare questo cliente?"
     );
     if (confirmDelete) {
-      fetch(`http://localhost:3001/cliente/${idCliente}`, {
+      fetch(`${process.env.REACT_APP_BACKEND}/cliente/${idCliente}`, {
         method: "DELETE",
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNzA2NzAyMjM2LCJleHAiOjE3MDczMDcwMzZ9.X9DQyuCcs9Ie6_Vu-ai9Q70lAA-8G8b8i8NY1bAVPwM",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           "Content-Type": "application/json",
         },
       })

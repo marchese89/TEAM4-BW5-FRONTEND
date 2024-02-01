@@ -50,11 +50,10 @@ export default function Clienti() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:3001/cliente", {
+    fetch(`${process.env.REACT_APP_BACKEND}/cliente`, {
       method: "POST",
       headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNzA2NzAyMjM2LCJleHAiOjE3MDczMDcwMzZ9.X9DQyuCcs9Ie6_Vu-ai9Q70lAA-8G8b8i8NY1bAVPwM",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -79,11 +78,10 @@ export default function Clienti() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3001/cliente", {
+    fetch(`${process.env.REACT_APP_BACKEND}/cliente`, {
       method: "GET",
       headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNzA2NzAyMjM2LCJleHAiOjE3MDczMDcwMzZ9.X9DQyuCcs9Ie6_Vu-ai9Q70lAA-8G8b8i8NY1bAVPwM",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         "Content-Type": "application/json",
       },
     })
