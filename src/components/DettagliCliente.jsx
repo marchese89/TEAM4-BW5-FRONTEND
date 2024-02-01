@@ -27,6 +27,18 @@ const StyledDettagliCliente = styled.div`
       cursor: pointer;
     }
   }
+  .address {
+    background-color: lightblue;
+    padding: 0.8em;
+    margin: 0.5em;
+    border-radius: 7px;
+  }
+  .addressRow {
+    background-color: lightgrey;
+    border-radius: 7px;
+    padding: 0.8em;
+    margin: 0.2em;
+  }
 `;
 
 function DettagliCliente() {
@@ -37,8 +49,11 @@ function DettagliCliente() {
   const [indirizzi, setIndirizzi] = useState([]);
   const navigate = useNavigate();
   const [showModalIndirizzo, setShowModalIndirizzo] = useState(false);
-  const [nuovoIndirizzo, setNuovoIndirizzo] = useState({});
+  const [indirizzo, setindirizzo] = useState({
+    tipoIndirizzo: "SEDE_LEGALE",
+  });
   const [province, setProvince] = useState([]);
+  const [provincia, setProvincia] = useState("");
   const [comuni, setComuni] = useState([]);
   const [comune, setComune] = useState([]);
 
@@ -85,7 +100,11 @@ function DettagliCliente() {
       }
     )
       .then((response) => response.json())
-      .then((data) => setIndirizzi(data))
+      .then((data) => {
+        setIndirizzi(data);
+        console.log("indirizzi");
+        console.log(data);
+      })
       .catch((error) => console.error("Error:", error));
   };
 
@@ -123,6 +142,14 @@ function DettagliCliente() {
       [e.target.name]: e.target.value,
     });
   };
+  const handleInputChangeIndirizzo = (e) => {
+    setindirizzo({
+      ...indirizzo,
+      [e.target.name]: e.target.value,
+      idComune: comune,
+      idCliente: idCliente,
+    });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -150,6 +177,32 @@ function DettagliCliente() {
         console.error("Error:", error);
       });
   };
+
+  function inserisciIndirizzo(event) {
+    event.preventDefault();
+    fetch(`${process.env.REACT_APP_BACKEND}/indirizzi`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+      body: JSON.stringify(indirizzo),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        handleCloseModalIndirizzo();
+        getIndirizziCliente();
+        setindirizzo({});
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   const handleDelete = () => {
     const confirmDelete = window.confirm(
@@ -231,12 +284,28 @@ function DettagliCliente() {
         }}
       ></PlusCircle>
       {indirizzi.map((indirizzo, i) => (
-        <tr key={i}>
-          <th scope="row">{indirizzo.id}</th>
-          <td>{indirizzo.sigla}</td>
-          <td>{indirizzo.provincia}</td>
-          <td>{indirizzo.regione}</td>
-        </tr>
+        <div key={i} className="address">
+          <div className="addressRow">
+            <strong>VIA:&nbsp;</strong>
+            {indirizzo.via}
+          </div>
+          <div className="addressRow">
+            <strong>Numero Civico:&nbsp;</strong>
+            {indirizzo.numeroCivico}
+          </div>
+          <div className="addressRow">
+            <strong>Località:&nbsp;</strong>
+            {indirizzo.localita}
+          </div>
+          <div className="addressRow">
+            <strong>CAP:&nbsp;</strong>
+            {indirizzo.cap}
+          </div>
+          <div className="addressRow">
+            <strong>Tipo Indirizzo:&nbsp;</strong>
+            {indirizzo.tipoIndirizzo}
+          </div>
+        </div>
       ))}
 
       <Modal show={showModal} onHide={handleCloseModalIndirizzo}>
@@ -349,17 +418,17 @@ function DettagliCliente() {
               <Form.Control
                 type="text"
                 name="via"
-                value={nuovoIndirizzo.via || ""}
-                onChange={handleInputChange}
+                value={indirizzo.via || ""}
+                onChange={handleInputChangeIndirizzo}
               />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Numero Civico</Form.Label>
               <Form.Control
                 type="text"
-                name="numero_civico"
-                value={nuovoIndirizzo.numeroCivico || ""}
-                onChange={handleInputChange}
+                name="numeroCivico"
+                value={indirizzo.numeroCivico || ""}
+                onChange={handleInputChangeIndirizzo}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -367,8 +436,8 @@ function DettagliCliente() {
               <Form.Control
                 type="text"
                 name="localita"
-                value={nuovoIndirizzo.localita || ""}
-                onChange={handleInputChange}
+                value={indirizzo.localita || ""}
+                onChange={handleInputChangeIndirizzo}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -378,17 +447,18 @@ function DettagliCliente() {
                 name="cap"
                 maxLength={5}
                 minLength={5}
-                value={nuovoIndirizzo.cap || ""}
-                onChange={handleInputChange}
+                value={indirizzo.cap || ""}
+                onChange={handleInputChangeIndirizzo}
               />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Provincia</Form.Label>
               <Form.Select
                 name="provincia"
-                // value={provinciaSelezionata}
+                value={provincia}
                 onChange={(e) => {
                   getComuniByProvincia(e.target.value);
+                  setProvincia(e.target.value);
                 }}
               >
                 <option></option>
@@ -402,10 +472,11 @@ function DettagliCliente() {
             <Form.Group className="mb-3">
               <Form.Label>Comune</Form.Label>
               <Form.Select
-                name="comune"
-                // value={comune}
+                name="idComune"
+                value={comune}
                 onChange={(e) => {
                   setComune(e.target.value);
+                  handleInputChangeIndirizzo(e);
                 }}
               >
                 {comuni.map((comune, i) => (
@@ -416,9 +487,9 @@ function DettagliCliente() {
               </Form.Select>
             </Form.Group>
             <Form.Select
-              name="tipo_indirizzo"
-              value={nuovoIndirizzo.tipoIndirizzo}
-              onChange={handleInputChange}
+              name="tipoIndirizzo"
+              value={indirizzo.tipoIndirizzo}
+              onChange={handleInputChangeIndirizzo}
             >
               <option>SEDE_LEGALE</option>
               <option>SEDE_OPERATIVA</option>
@@ -429,7 +500,7 @@ function DettagliCliente() {
           <Button variant="secondary" onClick={handleCloseModalIndirizzo}>
             Chiudi
           </Button>
-          <Button variant="primary" onClick={handleSubmit}>
+          <Button variant="primary" onClick={inserisciIndirizzo}>
             Inserisci Indirizzo
           </Button>
         </Modal.Footer>
