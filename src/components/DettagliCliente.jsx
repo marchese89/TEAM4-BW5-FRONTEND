@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { PlusCircle } from "react-bootstrap-icons";
 import styled from "styled-components";
 
 const StyledDettagliCliente = styled.div`
@@ -21,6 +22,11 @@ const StyledDettagliCliente = styled.div`
     font-weight: bold;
     margin-right: 5px;
   }
+  .plus {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 function DettagliCliente() {
@@ -28,7 +34,60 @@ function DettagliCliente() {
   const [showModal, setShowModal] = useState(false);
   const [clienteModificato, setClienteModificato] = useState({});
   const { idCliente } = useParams();
+  const [indirizzi, setIndirizzi] = useState([]);
   const navigate = useNavigate();
+  const [showModalIndirizzo, setShowModalIndirizzo] = useState(false);
+  const [nuovoIndirizzo, setNuovoIndirizzo] = useState({});
+  const [province, setProvince] = useState([]);
+  const [comuni, setComuni] = useState([]);
+  const [comune, setComune] = useState([]);
+
+  useEffect(() => {
+    getProvince();
+  }, []);
+
+  function getProvince() {
+    fetch(`${process.env.REACT_APP_BACKEND}/province/noPage`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setProvince(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  function getComuniByProvincia(provincia) {
+    fetch(`${process.env.REACT_APP_BACKEND}/comuni/byProvincia/${provincia}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setComuni(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  const getIndirizziCliente = () => {
+    fetch(
+      `${process.env.REACT_APP_BACKEND}/indirizzi/getByIdCliente/${idCliente}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => setIndirizzi(data))
+      .catch((error) => console.error("Error:", error));
+  };
 
   const caricaDettagliCliente = () => {
     fetch(`${process.env.REACT_APP_BACKEND}/cliente/${idCliente}`, {
@@ -43,6 +102,7 @@ function DettagliCliente() {
   };
   useEffect(() => {
     caricaDettagliCliente();
+    getIndirizziCliente();
   }, [idCliente]);
 
   useEffect(() => {
@@ -53,6 +113,9 @@ function DettagliCliente() {
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+
+  const handleShowModalIndirizzo = () => setShowModalIndirizzo(true);
+  const handleCloseModalIndirizzo = () => setShowModalIndirizzo(false);
 
   const handleInputChange = (e) => {
     setClienteModificato({
@@ -160,8 +223,23 @@ function DettagliCliente() {
           Elimina
         </Button>
       </div>
+      <h4>Indirizzi Cliente</h4>
+      <PlusCircle
+        className="fs-3 plus"
+        onClick={() => {
+          setShowModalIndirizzo(true);
+        }}
+      ></PlusCircle>
+      {indirizzi.map((indirizzo, i) => (
+        <tr key={i}>
+          <th scope="row">{indirizzo.id}</th>
+          <td>{indirizzo.sigla}</td>
+          <td>{indirizzo.provincia}</td>
+          <td>{indirizzo.regione}</td>
+        </tr>
+      ))}
 
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal show={showModal} onHide={handleCloseModalIndirizzo}>
         <Modal.Header closeButton>
           <Modal.Title>Modifica Cliente</Modal.Title>
         </Modal.Header>
@@ -251,11 +329,108 @@ function DettagliCliente() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button variant="secondary" onClick={handleCloseModalIndirizzo}>
             Chiudi
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
             Salva Modifiche
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* modale indirizzo */}
+      <Modal show={showModalIndirizzo} onHide={handleCloseModalIndirizzo}>
+        <Modal.Header closeButton>
+          <Modal.Title>Nuovo Indirizzo</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Via</Form.Label>
+              <Form.Control
+                type="text"
+                name="via"
+                value={nuovoIndirizzo.via || ""}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Numero Civico</Form.Label>
+              <Form.Control
+                type="text"
+                name="numero_civico"
+                value={nuovoIndirizzo.numeroCivico || ""}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Località</Form.Label>
+              <Form.Control
+                type="text"
+                name="localita"
+                value={nuovoIndirizzo.localita || ""}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>CAP</Form.Label>
+              <Form.Control
+                type="number"
+                name="cap"
+                maxLength={5}
+                minLength={5}
+                value={nuovoIndirizzo.cap || ""}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Provincia</Form.Label>
+              <Form.Select
+                name="provincia"
+                // value={provinciaSelezionata}
+                onChange={(e) => {
+                  getComuniByProvincia(e.target.value);
+                }}
+              >
+                <option></option>
+                {province.map((provincia, i) => (
+                  <option value={provincia.id} key={i}>
+                    {provincia.provincia}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Comune</Form.Label>
+              <Form.Select
+                name="comune"
+                // value={comune}
+                onChange={(e) => {
+                  setComune(e.target.value);
+                }}
+              >
+                {comuni.map((comune, i) => (
+                  <option value={comune.id} key={i}>
+                    {comune.denominazione}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Select
+              name="tipo_indirizzo"
+              value={nuovoIndirizzo.tipoIndirizzo}
+              onChange={handleInputChange}
+            >
+              <option>SEDE_LEGALE</option>
+              <option>SEDE_OPERATIVA</option>
+            </Form.Select>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModalIndirizzo}>
+            Chiudi
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            Inserisci Indirizzo
           </Button>
         </Modal.Footer>
       </Modal>
