@@ -26,7 +26,7 @@ function DettagliCliente() {
   const { idCliente } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const caricaDettagliCliente = () => {
     fetch(`http://localhost:3001/cliente/${idCliente}`, {
       method: "GET",
       headers: {
@@ -38,6 +38,9 @@ function DettagliCliente() {
       .then((response) => response.json())
       .then((data) => setCliente(data))
       .catch((error) => console.error("Error:", error));
+  };
+  useEffect(() => {
+    caricaDettagliCliente();
   }, [idCliente]);
 
   useEffect(() => {
@@ -77,6 +80,7 @@ function DettagliCliente() {
         console.log("Dati aggiornati:", data);
         setCliente(data);
         handleCloseModal();
+        caricaDettagliCliente();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -199,7 +203,7 @@ function DettagliCliente() {
             <Form.Group className="mb-3">
               <Form.Label>Telefono</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 name="telefono"
                 value={clienteModificato.telefono || ""}
                 onChange={handleInputChange}
@@ -209,7 +213,7 @@ function DettagliCliente() {
               <Form.Label>Nome Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="nomeContatto" // Corretto il nome del campo
+                name="nomeContatto"
                 value={clienteModificato.nomeContatto || ""}
                 onChange={handleInputChange}
               />
@@ -227,7 +231,7 @@ function DettagliCliente() {
               <Form.Label>Email Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="emailContatto" // Corretto il nome del campo
+                name="emailContatto"
                 value={clienteModificato.emailContatto || ""}
                 onChange={handleInputChange}
               />

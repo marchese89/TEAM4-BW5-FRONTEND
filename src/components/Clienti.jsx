@@ -70,8 +70,16 @@ export default function Clienti() {
       })
       .then((data) => {
         console.log("Nuovo cliente aggiunto:", data);
-        setClienti([...clienti, data]);
-        handleCloseModal();
+        if (data && data.id) {
+          const clienteAggiunto = {
+            ...nuovoCliente,
+            id: data.id,
+          };
+          setClienti((prevClienti) => [...prevClienti, clienteAggiunto]);
+          handleCloseModal();
+        } else {
+          console.error("Dati del nuovo cliente incompleti!", data);
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -202,6 +210,15 @@ export default function Clienti() {
                 type="text"
                 name="cognomeContatto"
                 value={nuovoCliente.cognomeContatto || ""}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Telefono Titolare</Form.Label>
+              <Form.Control
+                type="text"
+                name="telefonoContatto"
+                value={nuovoCliente.telefonoContatto || ""}
                 onChange={handleInputChange}
               />
             </Form.Group>
