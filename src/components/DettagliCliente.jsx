@@ -30,12 +30,11 @@ function DettagliCliente() {
   const { idCliente } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const caricaDettagliCliente = () => {
     fetch(`${process.env.REACT_APP_BACKEND}/cliente/${idCliente}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        "Content-Type": "application/json",
       },
     })
       .then((response) => response.json())
