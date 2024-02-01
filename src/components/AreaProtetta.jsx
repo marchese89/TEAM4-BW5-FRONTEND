@@ -23,7 +23,7 @@ const StyledAreaProtetta = styled.div`
     flex-grow: 1;
     ul {
       padding: 0;
-      background-color: cyan;
+      // background-color: cyan;
       width: 100%;
       flex-grow: 1;
       justify-content: center;
@@ -31,13 +31,20 @@ const StyledAreaProtetta = styled.div`
     }
     li {
       padding: 0.5em;
-      color: white;
+      color: black;
+      font-size: 1.3em;
       &:hover {
+        color: #03989e;
         cursor: pointer;
+        transform: scale(1.05);
+        font-weight: bold;
       }
     }
     .selected {
-      background-color: black;
+      color: #03989e;
+      transform: scale(1.05);
+      font-weight: bold;
+      text-decoration: underline;
     }
   }
 `;
@@ -48,7 +55,7 @@ export default function AreaProtetta() {
   return (
     <StyledAreaProtetta>
       <div className="nav">
-        <ul className="list-unstyled d-flex text-center">
+        <ul className="list-unstyled d-flex justify-content-start mb-3 mt-2">
           <li
             className={
               location.pathname === "/area_protetta/clienti" ? "selected" : ""
