@@ -197,10 +197,10 @@ function DettagliCliente() {
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Contatti</Form.Label>
+              <Form.Label>Telefono</Form.Label>
               <Form.Control
                 type="text"
-                name="contatti"
+                name="telefono"
                 value={clienteModificato.telefono || ""}
                 onChange={handleInputChange}
               />
@@ -209,7 +209,7 @@ function DettagliCliente() {
               <Form.Label>Nome Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="titolare"
+                name="nomeContatto" // Corretto il nome del campo
                 value={clienteModificato.nomeContatto || ""}
                 onChange={handleInputChange}
               />
@@ -218,7 +218,7 @@ function DettagliCliente() {
               <Form.Label>Cognome Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="titolare"
+                name="cognomeContatto"
                 value={clienteModificato.cognomeContatto || ""}
                 onChange={handleInputChange}
               />
@@ -227,7 +227,7 @@ function DettagliCliente() {
               <Form.Label>Email Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="titolare"
+                name="emailContatto" // Corretto il nome del campo
                 value={clienteModificato.emailContatto || ""}
                 onChange={handleInputChange}
               />

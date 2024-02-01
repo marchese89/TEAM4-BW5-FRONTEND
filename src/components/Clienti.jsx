@@ -31,6 +31,7 @@ export default function Clienti() {
     telefonoContatto: "",
     tipo: "",
   });
+  const [tipo, setTipo] = useState("");
 
   const handleNuovoCliente = () => {
     setShowModal(true);
@@ -56,7 +57,10 @@ export default function Clienti() {
           "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNzA2NzAyMjM2LCJleHAiOjE3MDczMDcwMzZ9.X9DQyuCcs9Ie6_Vu-ai9Q70lAA-8G8b8i8NY1bAVPwM",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(nuovoCliente),
+      body: JSON.stringify({
+        ...nuovoCliente,
+        tipo: tipo,
+      }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -178,7 +182,7 @@ export default function Clienti() {
               <Form.Label>Contatti</Form.Label>
               <Form.Control
                 type="number"
-                name="contatti"
+                name="telefono"
                 value={nuovoCliente.telefono || ""}
                 onChange={handleInputChange}
               />
@@ -187,7 +191,7 @@ export default function Clienti() {
               <Form.Label>Nome Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="titolare"
+                name="nomeContatto"
                 value={nuovoCliente.nomeContatto || ""}
                 onChange={handleInputChange}
               />
@@ -196,7 +200,7 @@ export default function Clienti() {
               <Form.Label>Cognome Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="titolare"
+                name="cognomeContatto"
                 value={nuovoCliente.cognomeContatto || ""}
                 onChange={handleInputChange}
               />
@@ -205,10 +209,24 @@ export default function Clienti() {
               <Form.Label>Email Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="titolare"
+                name="emailContatto"
                 value={nuovoCliente.emailContatto || ""}
                 onChange={handleInputChange}
               />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Tipo</Form.Label>
+              <Form.Select
+                name="tipo"
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
+              >
+                <option value="">Seleziona un tipo</option>
+                <option value="PA">PA</option>
+                <option value="SAS">SAS</option>
+                <option value="SPA">SPA</option>
+                <option value="SRL">SRL</option>
+              </Form.Select>
             </Form.Group>
             <Button
               variant="secondary"
