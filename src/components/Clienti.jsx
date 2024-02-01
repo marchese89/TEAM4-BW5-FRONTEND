@@ -2,19 +2,70 @@ import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const StyledClienti = styled.div`
-  background-color: grey;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  flex-direction: column;
-  width: 60%;
-  h3 {
-    text-align: center;
+  height: 100%;
+  .link {
+    padding: 0 1em;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+      cursor: pointer;
+      color: red;
+      background-color: blue;
+    }
+  }
+  .pages {
+    align-items: flex-end;
+  }
+  .input-file {
+    width: 40%;
+  }
+  .inputPage {
+    width: 80px;
+    margin-bottom: 3px;
+  }
+  .title {
+    justify-content: flex-start;
+    width: -webkit-fill-available;
+  }
+  .bi {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: larger;
+    cursor: pointer;
+  }
+  .btn-custom {
+    background-color: white;
+    border: 1px solid #2196f3;
+    color: #2196f3;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 20px;
+  }
+
+  /* Stile al passaggio del mouse */
+  .btn-custom:hover {
+    background-color: #2196f3;
+    color: white;
   }
 `;
+
+// background-color: grey;
+// display: flex;
+// align-items: center;
+// justify-content: center;
+// margin: 0 auto;
+// flex-direction: column;
+// width: 60%;
+// h3 {
+//   text-align: center;
+
 export default function Clienti() {
   const [clienti, setClienti] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -70,8 +121,16 @@ export default function Clienti() {
       })
       .then((data) => {
         console.log("Nuovo cliente aggiunto:", data);
-        setClienti([...clienti, data]);
-        handleCloseModal();
+        if (data && data.id) {
+          const clienteAggiunto = {
+            ...nuovoCliente,
+            id: data.id,
+          };
+          setClienti((prevClienti) => [...prevClienti, clienteAggiunto]);
+          handleCloseModal();
+        } else {
+          console.error("Dati del nuovo cliente incompleti!", data);
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -99,33 +158,53 @@ export default function Clienti() {
   }, []);
 
   return (
-    <StyledClienti>
-      <h3>Clienti</h3>
-      <Button variant="primary" onClick={handleNuovoCliente} className="mb-3">
-        Nuovo Cliente
-      </Button>
-      {Array.isArray(clienti) ? (
-        <ul className="list-group">
-          {clienti.map((cliente, index) => (
-            <Link
-              to={`/area_protetta/clienti/dettagli/${cliente.id}`}
-              key={cliente.id}
-              className="text-decoration-none"
-            >
-              <div>
-                <li key={index} className="list-group-item">
-                  <p>Ragione Sociale: {cliente.ragioneSociale}</p>
-                  <p>Partita IVA: {cliente.partitaIva}</p>
-                  <p>Email: {cliente.email}</p>
-                  <p>Fatturato Annuale: {cliente.fatturatoAnnuale}</p>
-                </li>
-              </div>
-            </Link>
-          ))}
-        </ul>
-      ) : (
-        <p>Nessun cliente disponibile o dati non corretti.</p>
-      )}
+    <StyledClienti className="d-flex flex-column align-items-center">
+      <div className="title d-flex ms-2">
+        <h3 className="text-center me-3">Lista Clienti</h3>
+        {/* <Button variant="primary" onClick={handleNuovoCliente} className="mb-3">
+          Nuovo Cliente
+        </Button> */}
+        <i onClick={handleNuovoCliente} className="bi bi-person-plus-fill"></i>
+      </div>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Ragione Sociale</th>
+            <th scope="col">Partita IVA</th>
+            <th scope="col">Email</th>
+            <th scope="col">Fatturato Annuale</th>
+            <th scope="col">Dettagli</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.isArray(clienti) ? (
+            clienti.map((cliente, index) => (
+              <tr key={index}>
+                <td>{cliente.id}</td>
+                <td>{cliente.ragioneSociale}</td>
+                <td>{cliente.partitaIva}</td>
+                <td>{cliente.email}</td>
+                <td>{cliente.fatturatoAnnuale}</td>
+                <td>
+                  <Link
+                    to={`/area_protetta/clienti/dettagli/${cliente.id}`}
+                    className="btn btn-custom"
+                  >
+                    Dettagli
+                  </Link>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6">
+                Nessun cliente disponibile o dati non corretti.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
@@ -202,6 +281,15 @@ export default function Clienti() {
                 type="text"
                 name="cognomeContatto"
                 value={nuovoCliente.cognomeContatto || ""}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Telefono Titolare</Form.Label>
+              <Form.Control
+                type="text"
+                name="telefonoContatto"
+                value={nuovoCliente.telefonoContatto || ""}
                 onChange={handleInputChange}
               />
             </Form.Group>

@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledDettagliCliente = styled.div`
-  background-color: grey;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,6 +16,11 @@ const StyledDettagliCliente = styled.div`
   .dettaglio {
     margin: 10px 0;
   }
+
+  .label {
+    font-weight: bold;
+    margin-right: 5px;
+  }
 `;
 
 function DettagliCliente() {
@@ -26,7 +30,7 @@ function DettagliCliente() {
   const { idCliente } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const caricaDettagliCliente = () => {
     fetch(`http://localhost:3001/cliente/${idCliente}`, {
       method: "GET",
       headers: {
@@ -38,6 +42,9 @@ function DettagliCliente() {
       .then((response) => response.json())
       .then((data) => setCliente(data))
       .catch((error) => console.error("Error:", error));
+  };
+  useEffect(() => {
+    caricaDettagliCliente();
   }, [idCliente]);
 
   useEffect(() => {
@@ -77,6 +84,7 @@ function DettagliCliente() {
         console.log("Dati aggiornati:", data);
         setCliente(data);
         handleCloseModal();
+        caricaDettagliCliente();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -118,25 +126,37 @@ function DettagliCliente() {
 
   return (
     <StyledDettagliCliente>
-      <h2>Dettagli Cliente</h2>
+      <h2 className="mt-2 mb-4">Dettagli Cliente</h2>
       <div className="dettaglio">
-        Ragione Sociale: {cliente.ragioneSociale} {cliente.tipo}
-      </div>
-      <div className="dettaglio">Partita IVA: {cliente.partitaIva}</div>
-      <div className="dettaglio">Email: {cliente.email}</div>
-      <div className="dettaglio">
-        Fatturato Annuale: {cliente.fatturatoAnnuale}
-      </div>
-      <div className="dettaglio">Pec: {cliente.pec}</div>
-      <div className="dettaglio">
-        Contatti: {cliente.telefono} {cliente.telefonoContatto}
+        <span className="label">Ragione Sociale:</span> {cliente.ragioneSociale}{" "}
+        {cliente.tipo}
       </div>
       <div className="dettaglio">
-        Titolare azienda:{cliente.cognomeContatto} {cliente.nomeContatto}
+        <span className="label">Partita IVA:</span> {cliente.partitaIva}
       </div>
-      <div className="dettaglio">Email Titolare: {cliente.emailContatto}</div>
+      <div className="dettaglio">
+        <span className="label">Email:</span> {cliente.email}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Fatturato Annuale:</span>{" "}
+        {cliente.fatturatoAnnuale}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Pec:</span> {cliente.pec}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Contatti:</span> {cliente.telefono}{" "}
+        {cliente.telefonoContatto}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Titolare azienda:</span>{" "}
+        {cliente.cognomeContatto} {cliente.nomeContatto}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Email Titolare:</span> {cliente.emailContatto}
+      </div>
 
-      <div>
+      <div className="mt-3">
         <Button variant="success" className="m-2" onClick={handleShowModal}>
           Modifica
         </Button>
@@ -199,7 +219,7 @@ function DettagliCliente() {
             <Form.Group className="mb-3">
               <Form.Label>Telefono</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 name="telefono"
                 value={clienteModificato.telefono || ""}
                 onChange={handleInputChange}
@@ -209,7 +229,7 @@ function DettagliCliente() {
               <Form.Label>Nome Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="nomeContatto" // Corretto il nome del campo
+                name="nomeContatto"
                 value={clienteModificato.nomeContatto || ""}
                 onChange={handleInputChange}
               />
@@ -227,7 +247,7 @@ function DettagliCliente() {
               <Form.Label>Email Titolare</Form.Label>
               <Form.Control
                 type="text"
-                name="emailContatto" // Corretto il nome del campo
+                name="emailContatto"
                 value={clienteModificato.emailContatto || ""}
                 onChange={handleInputChange}
               />
