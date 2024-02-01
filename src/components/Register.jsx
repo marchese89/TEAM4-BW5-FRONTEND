@@ -24,7 +24,7 @@ export default function Register() {
   const [role, setRole] = useState("USER");
 
   function registraUtente() {
-    fetch("http://localhost:3001/auth/register", {
+    fetch(`${process.env.REACT_APP_BACKEND}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

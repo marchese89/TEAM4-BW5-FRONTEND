@@ -17,7 +17,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   function loginUtente() {
-    fetch("http://localhost:3001/auth/login", {
+    fetch(`${process.env.REACT_APP_BACKEND}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
