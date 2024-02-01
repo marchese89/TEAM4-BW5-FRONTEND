@@ -1,7 +1,8 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledAreaProtetta = styled.div`
+  ${"" /* height: 60%; */}
   .inner {
     background-color: grey;
     display: flex;
@@ -9,7 +10,7 @@ const StyledAreaProtetta = styled.div`
     justify-content: center;
     margin: 0 auto;
     flex-direction: column;
-    width: 60%;
+    width: 100%;
     h3 {
       text-align: center;
     }
@@ -35,32 +36,76 @@ const StyledAreaProtetta = styled.div`
         cursor: pointer;
       }
     }
+    .selected {
+      background-color: black;
+    }
   }
 `;
 
 export default function AreaProtetta() {
   const navigate = useNavigate();
+  const location = useLocation();
   return (
     <StyledAreaProtetta>
       <div className="nav">
         <ul className="list-unstyled d-flex text-center">
           <li
+            className={
+              location.pathname === "/area_protetta/clienti" ? "selected" : ""
+            }
             onClick={() => {
               navigate("./clienti");
             }}
           >
             Clienti
           </li>
-          <li>Indirizzi</li>
-          <li>Province</li>
-          <li>Comuni</li>
-          <li>Fatture</li>
+          <li
+            className={
+              location.pathname === "/area_protetta/indirizzi" ? "selected" : ""
+            }
+          >
+            Indirizzi
+          </li>
+          <li
+            className={
+              location.pathname === "/area_protetta/province" ? "selected" : ""
+            }
+            onClick={() => {
+              navigate("./province");
+            }}
+          >
+            Province
+          </li>
+          <li
+            className={
+              location.pathname === "/area_protetta/comuni" ? "selected" : ""
+            }
+            onClick={() => {
+              navigate("./comuni");
+            }}
+          >
+            Comuni
+          </li>
+          <li
+            className={
+              location.pathname === "/area_protetta/fatture" ? "selected" : ""
+            }
+          >
+            Fatture
+          </li>
+          <li
+            className={
+              location.pathname === "/area_protetta/utenti" ? "selected" : ""
+            }
+          >
+            Utenti
+          </li>
         </ul>
       </div>
-      <Outlet />
-      <div className="inner">
+      {/* <div className="inner">
         <h3>Area protetta</h3>
-      </div>
+      </div> */}
+      <Outlet />
     </StyledAreaProtetta>
   );
 }

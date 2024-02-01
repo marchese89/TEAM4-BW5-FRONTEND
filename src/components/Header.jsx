@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -5,7 +6,7 @@ const StyledHeader = styled.div`
   background-color: lightgrey;
   position: relative;
   h1 {
-    font-size: 3em;
+    font-size: 2.5em;
     text-align: center;
     padding: 0.5em 0;
     color: blue;
