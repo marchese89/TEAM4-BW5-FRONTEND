@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledDettagliCliente = styled.div`
-  background-color: grey;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,6 +15,11 @@ const StyledDettagliCliente = styled.div`
   }
   .dettaglio {
     margin: 10px 0;
+  }
+
+  .label {
+    font-weight: bold;
+    margin-right: 5px;
   }
 `;
 
@@ -122,25 +126,37 @@ function DettagliCliente() {
 
   return (
     <StyledDettagliCliente>
-      <h2>Dettagli Cliente</h2>
+      <h2 className="mt-2 mb-4">Dettagli Cliente</h2>
       <div className="dettaglio">
-        Ragione Sociale: {cliente.ragioneSociale} {cliente.tipo}
-      </div>
-      <div className="dettaglio">Partita IVA: {cliente.partitaIva}</div>
-      <div className="dettaglio">Email: {cliente.email}</div>
-      <div className="dettaglio">
-        Fatturato Annuale: {cliente.fatturatoAnnuale}
-      </div>
-      <div className="dettaglio">Pec: {cliente.pec}</div>
-      <div className="dettaglio">
-        Contatti: {cliente.telefono} {cliente.telefonoContatto}
+        <span className="label">Ragione Sociale:</span> {cliente.ragioneSociale}{" "}
+        {cliente.tipo}
       </div>
       <div className="dettaglio">
-        Titolare azienda:{cliente.cognomeContatto} {cliente.nomeContatto}
+        <span className="label">Partita IVA:</span> {cliente.partitaIva}
       </div>
-      <div className="dettaglio">Email Titolare: {cliente.emailContatto}</div>
+      <div className="dettaglio">
+        <span className="label">Email:</span> {cliente.email}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Fatturato Annuale:</span>{" "}
+        {cliente.fatturatoAnnuale}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Pec:</span> {cliente.pec}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Contatti:</span> {cliente.telefono}{" "}
+        {cliente.telefonoContatto}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Titolare azienda:</span>{" "}
+        {cliente.cognomeContatto} {cliente.nomeContatto}
+      </div>
+      <div className="dettaglio">
+        <span className="label">Email Titolare:</span> {cliente.emailContatto}
+      </div>
 
-      <div>
+      <div className="mt-3">
         <Button variant="success" className="m-2" onClick={handleShowModal}>
           Modifica
         </Button>
