@@ -41,6 +41,19 @@ const StyledClienti = styled.div`
     font-size: larger;
     cursor: pointer;
   }
+  .btn-custom {
+    background-color: white;
+    border: 1px solid #2196f3;
+    color: #2196f3;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 20px;
+  }
+
+  /* Stile al passaggio del mouse */
+  .btn-custom:hover {
+    background-color: #2196f3;
+    color: white;
+  }
 `;
 
 // background-color: grey;
@@ -146,12 +159,12 @@ export default function Clienti() {
 
   return (
     <StyledClienti className="d-flex flex-column align-items-center">
-      <div className="title d-flex">
+      <div className="title d-flex ms-2">
         <h3 className="text-center me-3">Lista Clienti</h3>
         {/* <Button variant="primary" onClick={handleNuovoCliente} className="mb-3">
           Nuovo Cliente
         </Button> */}
-        <i onClick={handleNuovoCliente} className="bi bi-plus-circle-fill"></i>
+        <i onClick={handleNuovoCliente} className="bi bi-person-plus-fill"></i>
       </div>
       <table className="table">
         <thead>
@@ -176,7 +189,7 @@ export default function Clienti() {
                 <td>
                   <Link
                     to={`/area_protetta/clienti/dettagli/${cliente.id}`}
-                    className="btn btn-primary"
+                    className="btn btn-custom"
                   >
                     Dettagli
                   </Link>
