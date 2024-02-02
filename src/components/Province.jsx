@@ -23,6 +23,12 @@ const StyledProvince = styled.div`
       border: 1px solid #03989e;
     }
   }
+  .link.selected {
+    color: #03989e;
+    background-color: white;
+    font-weight: bold;
+    border: 1px solid #03989e;
+  }
   .pages {
     align-items: flex-end;
   }
@@ -49,6 +55,7 @@ export default function Province() {
   const [province, setProvince] = useState([]);
   const [pagine, setPagine] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedPage, setSelectedPage] = useState(0);
 
   function uploadProvince() {
     if (selectedFile) {
@@ -109,6 +116,7 @@ export default function Province() {
         }
         setPagine(array);
         setProvince(data.content);
+        setSelectedPage(page);
       })
 
       .catch((err) => console.log("ERRORE!", err));
@@ -187,7 +195,7 @@ export default function Province() {
         {pagine.map((pagina, i) => (
           <span
             key={i}
-            className="link"
+            className={`link ${selectedPage === pagina ? "selected" : ""}`}
             onClick={() => {
               provinceList(i);
             }}

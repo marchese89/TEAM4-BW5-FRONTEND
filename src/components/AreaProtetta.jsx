@@ -55,7 +55,7 @@ export default function AreaProtetta() {
   return (
     <StyledAreaProtetta>
       <div className="nav">
-        <ul className="list-unstyled d-flex justify-content-start mb-3 mt-2">
+        <ul className="list-unstyled d-flex justify-content-center mb-3 mt-2">
           <li
             className={
               location.pathname === "/area_protetta/clienti" ? "selected" : ""

@@ -3,15 +3,24 @@ import { Button, Form, InputGroup } from "react-bootstrap";
 import styled from "styled-components";
 
 const StyledRegister = styled.div`
-  background-color: grey;
+  background-color: #ffffffec;
+  border: 2px solid #03999ec6;
+  border-radius: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
   flex-direction: column;
-  width: 60%;
+  width: 20%;
   h3 {
     text-align: center;
+    margin: 1em 0;
+    color: #02657b;
+  }
+  .save-button {
+    margin: 1em 0;
+    background-color: #03989e;
+    border-color: #03989e;
   }
 `;
 

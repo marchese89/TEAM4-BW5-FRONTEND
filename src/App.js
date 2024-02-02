@@ -10,10 +10,6 @@ import Province from "./components/Province";
 import Comuni from "./components/Comuni";
 import Fatture from "./components/Fatture";
 
-
-
-
-
 function App() {
   return (
     <BrowserRouter>
@@ -22,7 +18,7 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="area_protetta" element={<AreaProtetta />}>
-          <Route path="fatture" element={<Fatture />} />
+            <Route path="fatture" element={<Fatture />} />
             <Route path="clienti" element={<Clienti />} />
 
             <Route
