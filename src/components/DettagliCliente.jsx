@@ -17,6 +17,7 @@ const StyledDettagliCliente = styled.div`
   }
   .dettaglio {
     margin: 10px 0;
+    padding-left: 1em;
   }
 
   .label {
@@ -55,13 +56,14 @@ const StyledDettagliCliente = styled.div`
   }
   .address {
     /* background-color: lightblue; */
-    padding: 0.8em;
+    padding: 0.8em 0;
     margin: 0.5em;
   }
   .addressRow {
     /* background-color: lightgrey;
     border-radius: 7px; */
-    padding: 0.2em;
+    line-height: 1.5;
+    padding: 10px;
   }
   .Col {
     padding: 20px;
@@ -70,6 +72,9 @@ const StyledDettagliCliente = styled.div`
     flex-direction: column;
     line-height: 1.5;
     margin: 0 2em;
+  }
+  .btn-container {
+    margin-top: 1.2em;
   }
 `;
 
@@ -437,7 +442,7 @@ function DettagliCliente() {
                 <strong>Tipo Indirizzo:&nbsp;</strong>
                 {indirizzo.tipoIndirizzo}
               </div>
-              <div className="d-flex justify-content-evenly p-1">
+              <div className="btn-container d-flex justify-content-evenly p-1">
                 <button
                   className="btn btn-custom"
                   onClick={() => {
