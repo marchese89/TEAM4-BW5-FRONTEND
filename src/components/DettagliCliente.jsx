@@ -12,7 +12,7 @@ const StyledDettagliCliente = styled.div`
   flex-direction: column;
   width: 60%;
   h2 {
-    text-align: center;
+    text-align: start;
     color: #03989e;
   }
   .dettaglio {
@@ -47,6 +47,8 @@ const StyledDettagliCliente = styled.div`
     color: white;
   }
   .plus {
+    margin-left: 10px;
+    color: #03989e;
     &:hover {
       cursor: pointer;
     }
@@ -61,13 +63,13 @@ const StyledDettagliCliente = styled.div`
     border-radius: 7px; */
     padding: 0.2em;
   }
-  .col {
-    flex: 1;
+  .Col {
     padding: 20px;
     min-height: 300px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    line-height: 1.5;
+    margin: 0 2em;
   }
 `;
 
@@ -356,8 +358,8 @@ function DettagliCliente() {
 
   return (
     <StyledDettagliCliente>
-      <div className="Row d-flex ">
-        <div className="Col m-e">
+      <div className="Row d-flex mt-4">
+        <div className="Col ">
           <h2 className=" mb-4">Dettagli Cliente</h2>
           <div className="dettaglio">
             <span className="label">Ragione Sociale:</span>{" "}
@@ -398,15 +400,17 @@ function DettagliCliente() {
             </Button>
           </div>
         </div>
-        <div className="Col m-3">
-          <h4>Indirizzi Cliente</h4>
-          <PlusCircle
-            className="fs-3 plus"
-            onClick={() => {
-              setModificaIndirizzo(false);
-              setShowModalIndirizzo(true);
-            }}
-          ></PlusCircle>
+        <div className="Col ">
+          <div className="d-flex align-items-center">
+            <h2 className="mb-0 mr-2">Indirizzi Cliente</h2>
+            <PlusCircle
+              className="fs-3 plus"
+              onClick={() => {
+                setModificaIndirizzo(false);
+                setShowModalIndirizzo(true);
+              }}
+            ></PlusCircle>
+          </div>
           {indirizzi.map((indirizzo, i) => (
             <div key={i} className="address">
               <div className="addressRow">
