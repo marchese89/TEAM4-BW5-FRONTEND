@@ -4,9 +4,12 @@ import styled from "styled-components";
 
 const StyledComuni = styled.div`
   height: 100%;
+  h4 {
+    color: #03989e;
+  }
   .link {
     padding: 0 1em;
-    border-radius: 8px;
+    border-radius: 20px;
     width: 40px;
     height: 40px;
     display: flex;
@@ -14,8 +17,10 @@ const StyledComuni = styled.div`
     align-items: center;
     &:hover {
       cursor: pointer;
-      color: red;
-      background-color: blue;
+      color: #03989e;
+      background-color: white;
+      font-weight: bold;
+      border: 1px solid #03989e;
     }
   }
   .pages {
@@ -38,6 +43,25 @@ const StyledComuni = styled.div`
     ${"" /* transform: translate(-50%, -50%); */}
     top: 50%;
     left: 50%;
+    color: #03989e;
+  }
+  .btn-danger-custom {
+    background-color: white;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    border-radius: 20px;
+  }
+
+  .btn-danger-custom:hover {
+    background-color: #dc3545;
+    color: white;
+  }
+  .btn-custom {
+    background-color: #03989e;
+
+    color: white;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 20px;
   }
 `;
 
@@ -153,7 +177,7 @@ export default function Comuni() {
       )}
 
       <div className="d-flex align-items-center py-1">
-        <h5 className="text-center mx-2">Carica comuni da file</h5>
+        <h4 className="text-center me-3">Carica comuni da file</h4>
         <div className="d-flex align-items-center my-2">
           <Form.Control
             type="file"
@@ -169,7 +193,7 @@ export default function Comuni() {
             </button>
           )}
         </div>
-        <button className="btn btn-danger mx-3" onClick={eliminaTutto}>
+        <button className="btn btn-danger-custom mx-3" onClick={eliminaTutto}>
           ELIMINA TUTTO
         </button>
       </div>
@@ -213,7 +237,7 @@ export default function Comuni() {
             }}
           ></Form.Control>
           <button
-            className="btn btn-primary"
+            className="btn btn-custom"
             onClick={() => {
               comuniList(pageNumber);
             }}

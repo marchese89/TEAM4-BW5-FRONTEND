@@ -8,7 +8,7 @@ const StyledClienti = styled.div`
   height: 100%;
   .link {
     padding: 0 1em;
-    border-radius: 8px;
+    border-radius: 20px;
     width: 40px;
     height: 40px;
     display: flex;
@@ -16,8 +16,10 @@ const StyledClienti = styled.div`
     align-items: center;
     &:hover {
       cursor: pointer;
-      color: red;
-      background-color: blue;
+      background-color: white;
+      font-weight: bold;
+      border: 1px solid #03989e;
+      color: #03989e;
     }
   }
   .pages {
@@ -58,7 +60,7 @@ const StyledClienti = styled.div`
     color: white;
   }
   .lista {
-    color: #7ed957;
+    color: #03989e;
   }
 `;
 
@@ -357,7 +359,7 @@ export default function Clienti() {
                 <td>{cliente.id}</td>
                 <td>
                   {cliente.ragioneSociale}{" "}
-                  <div>
+                  {/* <div>
                     SEDE LEGALE:{" "}
                     {cliente.indirizzi &&
                     cliente.indirizzi.some(
@@ -368,7 +370,7 @@ export default function Clienti() {
                             indirizzo.tipoIndirizzo === "SEDE_LEGALE"
                         ).comune.provincia.sigla
                       : ""}
-                  </div>
+                  </div> */}
                 </td>
                 <td className="align-middle text-center">
                   {cliente.partitaIva}

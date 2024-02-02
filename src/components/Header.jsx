@@ -21,10 +21,10 @@ const StyledHeader = styled.div`
     top: 0.5em;
   }
   .link {
-    font-weigth: bold;
+    font-weight: bold;
     font-size: 12pt;
     &:hover {
-      color: blue;
+      color: #03989e;
       cursor: pointer;
     }
   }
