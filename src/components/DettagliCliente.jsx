@@ -56,6 +56,8 @@ function DettagliCliente() {
   const [provincia, setProvincia] = useState("");
   const [comuni, setComuni] = useState([]);
   const [comune, setComune] = useState([]);
+  const [modificaIndirizzo, setModificaIndirizzo] = useState(false);
+  const [indirizzoId, setindirizzoId] = useState();
 
   useEffect(() => {
     getProvince();
@@ -102,8 +104,8 @@ function DettagliCliente() {
       .then((response) => response.json())
       .then((data) => {
         setIndirizzi(data);
-        console.log("indirizzi");
-        console.log(data);
+        // console.log("indirizzi");
+        // console.log(data);
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -133,7 +135,7 @@ function DettagliCliente() {
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  const handleShowModalIndirizzo = () => setShowModalIndirizzo(true);
+  // const handleShowModalIndirizzo = () => setShowModalIndirizzo(true);
   const handleCloseModalIndirizzo = () => setShowModalIndirizzo(false);
 
   const handleInputChange = (e) => {
@@ -146,9 +148,18 @@ function DettagliCliente() {
     setindirizzo({
       ...indirizzo,
       [e.target.name]: e.target.value,
-      idComune: comune,
+      // idComune: comune,
       idCliente: idCliente,
     });
+    if (
+      indirizzo.tipoIndirizzo === null ||
+      indirizzo.tipoIndirizzo === undefined
+    ) {
+      setindirizzo({
+        ...indirizzo,
+        tipoIndirizzo: "SEDE_LEGALE",
+      });
+    }
   };
 
   const handleSubmit = (event) => {
@@ -168,7 +179,7 @@ function DettagliCliente() {
         return response.json();
       })
       .then((data) => {
-        console.log("Dati aggiornati:", data);
+        // console.log("Dati aggiornati:", data);
         setCliente(data);
         handleCloseModal();
         caricaDettagliCliente();
@@ -189,10 +200,13 @@ function DettagliCliente() {
       body: JSON.stringify(indirizzo),
     })
       .then((response) => {
-        if (!response.ok) {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status === 401) {
+          window.alert("Non puoi inserire due indirizzi con lo stesso tipo!");
+        } else {
           throw new Error("Network response was not ok");
         }
-        return response.json();
       })
       .then((data) => {
         handleCloseModalIndirizzo();
@@ -227,6 +241,80 @@ function DettagliCliente() {
         });
     }
   };
+
+  const eliminaIndirizzo = (idIndirizzo) => {
+    const confirmDelete = window.confirm(
+      "Sei sicuro di voler eliminare questo indirizzo?"
+    );
+    if (confirmDelete) {
+      fetch(`${process.env.REACT_APP_BACKEND}/indirizzi/${idIndirizzo}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.status === 204) {
+            getIndirizziCliente();
+          } else {
+            throw new Error("Network response was not 204");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  };
+
+  function getProvinciaByComune(idComune) {
+    fetch(`${process.env.REACT_APP_BACKEND}/comuni/idProvincia/${idComune}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Network response was not ok");
+        }
+      })
+      .then((data) => {
+        setProvincia(data.id);
+        getComuniByProvincia(data.id);
+        setComune(idComune);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
+  function modificaIndirizzoAction() {
+    fetch(`${process.env.REACT_APP_BACKEND}/indirizzi/${indirizzoId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+      body: JSON.stringify(indirizzo),
+    })
+      .then((response) => {
+        if (response.ok) {
+          handleCloseModalIndirizzo();
+          getIndirizziCliente();
+          setindirizzo({});
+        } else {
+          window.alert("Ci sono stati problemi, indirizzo non modificato");
+          throw new Error("Network response was not ok");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   if (!cliente) {
     return (
@@ -280,6 +368,7 @@ function DettagliCliente() {
       <PlusCircle
         className="fs-3 plus"
         onClick={() => {
+          setModificaIndirizzo(false);
           setShowModalIndirizzo(true);
         }}
       ></PlusCircle>
@@ -302,13 +391,49 @@ function DettagliCliente() {
             {indirizzo.cap}
           </div>
           <div className="addressRow">
+            <strong>Comune:&nbsp;</strong>
+            {indirizzo.comune.denominazione}
+          </div>
+          <div className="addressRow">
             <strong>Tipo Indirizzo:&nbsp;</strong>
             {indirizzo.tipoIndirizzo}
           </div>
+          <div className="d-flex justify-content-evenly p-1">
+            <button
+              className="btn btn-warning"
+              onClick={() => {
+                setComune(indirizzo.comune.id);
+                getProvinciaByComune(indirizzo.comune.id);
+                // console.log("comune:" + indirizzo.comune.id);
+                setindirizzo({
+                  via: indirizzo.via,
+                  numeroCivico: indirizzo.numeroCivico,
+                  localita: indirizzo.localita,
+                  cap: indirizzo.cap,
+                  tipoIndirizzo: indirizzo.tipoIndirizzo,
+                  idComune: comune,
+                  idCliente: idCliente,
+                });
+                setindirizzoId(indirizzo.id);
+                setShowModalIndirizzo(true);
+                setModificaIndirizzo(true);
+              }}
+            >
+              Modifica
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                eliminaIndirizzo(indirizzo.id);
+              }}
+            >
+              Elimina
+            </button>
+          </div>
         </div>
       ))}
-
-      <Modal show={showModal} onHide={handleCloseModalIndirizzo}>
+      {/* modale modifica cliente */}
+      <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Modifica Cliente</Modal.Title>
         </Modal.Header>
@@ -398,7 +523,7 @@ function DettagliCliente() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModalIndirizzo}>
+          <Button variant="secondary" onClick={handleCloseModal}>
             Chiudi
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
@@ -409,7 +534,11 @@ function DettagliCliente() {
       {/* modale indirizzo */}
       <Modal show={showModalIndirizzo} onHide={handleCloseModalIndirizzo}>
         <Modal.Header closeButton>
-          <Modal.Title>Nuovo Indirizzo</Modal.Title>
+          <Modal.Title>
+            {modificaIndirizzo === false
+              ? "Nuovo Indirizzo"
+              : "Modifica Indirizzo"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
@@ -474,11 +603,13 @@ function DettagliCliente() {
               <Form.Select
                 name="idComune"
                 value={comune}
+                required
                 onChange={(e) => {
                   setComune(e.target.value);
                   handleInputChangeIndirizzo(e);
                 }}
               >
+                <option></option>
                 {comuni.map((comune, i) => (
                   <option value={comune.id} key={i}>
                     {comune.denominazione}
@@ -486,22 +617,41 @@ function DettagliCliente() {
                 ))}
               </Form.Select>
             </Form.Group>
-            <Form.Select
-              name="tipoIndirizzo"
-              value={indirizzo.tipoIndirizzo}
-              onChange={handleInputChangeIndirizzo}
-            >
-              <option>SEDE_LEGALE</option>
-              <option>SEDE_OPERATIVA</option>
-            </Form.Select>
+            {modificaIndirizzo === false && (
+              <Form.Select
+                name="tipoIndirizzo"
+                value={indirizzo.tipoIndirizzo}
+                onChange={handleInputChangeIndirizzo}
+              >
+                <option>SEDE_LEGALE</option>
+                <option>SEDE_OPERATIVA</option>
+              </Form.Select>
+            )}
+            {modificaIndirizzo === true && (
+              <div className="d-flex flex-column">
+                <div>Tipo Indirizzo</div>
+                <span>
+                  <strong>{indirizzo.tipoIndirizzo}</strong>
+                </span>
+              </div>
+            )}
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModalIndirizzo}>
             Chiudi
           </Button>
-          <Button variant="primary" onClick={inserisciIndirizzo}>
-            Inserisci Indirizzo
+          <Button
+            variant="primary"
+            onClick={
+              modificaIndirizzo === false
+                ? inserisciIndirizzo
+                : modificaIndirizzoAction
+            }
+          >
+            {modificaIndirizzo === false
+              ? "Inserisci Indirizzo"
+              : "Modifica Indirizzo"}
           </Button>
         </Modal.Footer>
       </Modal>
