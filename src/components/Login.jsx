@@ -4,13 +4,19 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledLogin = styled.div`
-  background-color: darkgrey;
-  border-radius: 7px;
+  background-color: #03989e33;
+  border-radius: 40px;
   margin: 1em;
   padding: 2em;
   min-width: 350px;
   width: 20%;
   margin: 0 auto;
+
+  .save-button {
+    background-color: #03989e;
+    border-color: #03989e;
+    margin-top: 1em;
+  }
 `;
 export default function Login() {
   const navigate = useNavigate();
@@ -56,7 +62,7 @@ export default function Login() {
           }}
         ></Form.Control>
         <InputGroup className="d-flex flex-column w-100">
-          <Form.Label className="text-center fs-5">Password</Form.Label>
+          <Form.Label className="text-center fs-5 mt-3">Password</Form.Label>
         </InputGroup>
         <Form.Control
           type="password"
