@@ -95,7 +95,7 @@ function DettagliCliente() {
   const [comune, setComune] = useState();
   const [modificaIndirizzo, setModificaIndirizzo] = useState(false);
   const [indirizzoId, setindirizzoId] = useState();
-
+ console.log("indirizzi" + indirizzi)
   useEffect(() => {
     getProvince();
   }, []);
