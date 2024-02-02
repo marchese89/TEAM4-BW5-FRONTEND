@@ -61,7 +61,7 @@ export default function Fatture(){
       event.preventDefault();
     }
   
-    fetch(`${process.env.REACT_APP_BACKEND}/fatture/`, {
+    fetch(`${process.env.REACT_APP_BACKEND}/fatture`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -81,7 +81,7 @@ export default function Fatture(){
           setFattura(data.content);
       }})
       .catch((err) => {
-        console.log("erroreee", err);
+        console.log("errore", err);
       });
   };
 
