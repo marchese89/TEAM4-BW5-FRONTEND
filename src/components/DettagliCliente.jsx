@@ -77,9 +77,9 @@ function DettagliCliente() {
     tipoIndirizzo: "SEDE_LEGALE",
   });
   const [province, setProvince] = useState([]);
-  const [provincia, setProvincia] = useState("");
+  const [provincia, setProvincia] = useState();
   const [comuni, setComuni] = useState([]);
-  const [comune, setComune] = useState([]);
+  const [comune, setComune] = useState();
   const [modificaIndirizzo, setModificaIndirizzo] = useState(false);
   const [indirizzoId, setindirizzoId] = useState();
 
