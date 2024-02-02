@@ -25,14 +25,14 @@ const StyledDettagliCliente = styled.div`
   }
   .btn-custom {
     background-color: white;
-    border: 1px solid #4caf50;
-    color: #4caf50;
+    border: 1px solid orange;
+    color: orange;
     transition: background-color 0.3s, color 0.3s;
     border-radius: 20px;
   }
 
   .btn-custom:hover {
-    background-color: #4caf50;
+    background-color: orange;
     color: white;
   }
   .btn-danger-custom {
@@ -52,16 +52,22 @@ const StyledDettagliCliente = styled.div`
     }
   }
   .address {
-    background-color: lightblue;
+    /* background-color: lightblue; */
     padding: 0.8em;
     margin: 0.5em;
-    border-radius: 7px;
   }
   .addressRow {
-    background-color: lightgrey;
-    border-radius: 7px;
-    padding: 0.8em;
-    margin: 0.2em;
+    /* background-color: lightgrey;
+    border-radius: 7px; */
+    padding: 0.2em;
+  }
+  .col {
+    flex: 1;
+    padding: 20px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 `;
 
@@ -350,112 +356,119 @@ function DettagliCliente() {
 
   return (
     <StyledDettagliCliente>
-      <h2 className="mt-2 mb-4">Dettagli Cliente</h2>
-      <div className="dettaglio">
-        <span className="label">Ragione Sociale:</span> {cliente.ragioneSociale}{" "}
-        {cliente.tipo}
-      </div>
-      <div className="dettaglio">
-        <span className="label">Partita IVA:</span> {cliente.partitaIva}
-      </div>
-      <div className="dettaglio">
-        <span className="label">Email:</span> {cliente.email}
-      </div>
-      <div className="dettaglio">
-        <span className="label">Fatturato Annuale:</span>{" "}
-        {cliente.fatturatoAnnuale}
-      </div>
-      <div className="dettaglio">
-        <span className="label">Pec:</span> {cliente.pec}
-      </div>
-      <div className="dettaglio">
-        <span className="label">Contatti:</span> {cliente.telefono}{" "}
-        {cliente.telefonoContatto}
-      </div>
-      <div className="dettaglio">
-        <span className="label">Titolare azienda:</span>{" "}
-        {cliente.cognomeContatto} {cliente.nomeContatto}
-      </div>
-      <div className="dettaglio">
-        <span className="label">Email Titolare:</span> {cliente.emailContatto}
-      </div>
+      <div className="Row d-flex ">
+        <div className="Col m-e">
+          <h2 className=" mb-4">Dettagli Cliente</h2>
+          <div className="dettaglio">
+            <span className="label">Ragione Sociale:</span>{" "}
+            {cliente.ragioneSociale} {cliente.tipo}
+          </div>
+          <div className="dettaglio">
+            <span className="label">Partita IVA:</span> {cliente.partitaIva}
+          </div>
+          <div className="dettaglio">
+            <span className="label">Email:</span> {cliente.email}
+          </div>
+          <div className="dettaglio">
+            <span className="label">Fatturato Annuale:</span>{" "}
+            {cliente.fatturatoAnnuale}
+          </div>
+          <div className="dettaglio">
+            <span className="label">Pec:</span> {cliente.pec}
+          </div>
+          <div className="dettaglio">
+            <span className="label">Contatti:</span> {cliente.telefono}{" "}
+            {cliente.telefonoContatto}
+          </div>
+          <div className="dettaglio">
+            <span className="label">Titolare azienda:</span>{" "}
+            {cliente.cognomeContatto} {cliente.nomeContatto}
+          </div>
+          <div className="dettaglio">
+            <span className="label">Email Titolare:</span>{" "}
+            {cliente.emailContatto}
+          </div>
 
-      <div className="mt-3">
-        <Button className="btn-custom m-2" onClick={handleShowModal}>
-          Modifica
-        </Button>
-        <Button className="btn-danger-custom m-2" onClick={handleDelete}>
-          Elimina
-        </Button>
-      </div>
-      <h4>Indirizzi Cliente</h4>
-      <PlusCircle
-        className="fs-3 plus"
-        onClick={() => {
-          setModificaIndirizzo(false);
-          setShowModalIndirizzo(true);
-        }}
-      ></PlusCircle>
-      {indirizzi.map((indirizzo, i) => (
-        <div key={i} className="address">
-          <div className="addressRow">
-            <strong>VIA:&nbsp;</strong>
-            {indirizzo.via}
-          </div>
-          <div className="addressRow">
-            <strong>Numero Civico:&nbsp;</strong>
-            {indirizzo.numeroCivico}
-          </div>
-          <div className="addressRow">
-            <strong>Località:&nbsp;</strong>
-            {indirizzo.localita}
-          </div>
-          <div className="addressRow">
-            <strong>CAP:&nbsp;</strong>
-            {indirizzo.cap}
-          </div>
-          <div className="addressRow">
-            <strong>Comune:&nbsp;</strong>
-            {indirizzo.comune.denominazione}
-          </div>
-          <div className="addressRow">
-            <strong>Tipo Indirizzo:&nbsp;</strong>
-            {indirizzo.tipoIndirizzo}
-          </div>
-          <div className="d-flex justify-content-evenly p-1">
-            <button
-              className="btn btn-warning"
-              onClick={() => {
-                setComune(indirizzo.comune.id);
-                getProvinciaByComune(indirizzo.comune.id);
-                // console.log("comune:" + indirizzo.comune.id);
-                setindirizzo({
-                  via: indirizzo.via,
-                  numeroCivico: indirizzo.numeroCivico,
-                  localita: indirizzo.localita,
-                  cap: indirizzo.cap,
-                  tipoIndirizzo: indirizzo.tipoIndirizzo,
-                  idComune: comune,
-                  idCliente: idCliente,
-                });
-                setindirizzoId(indirizzo.id);
-                setShowModalIndirizzo(true);
-                setModificaIndirizzo(true);
-              }}
-            >
+          <div className="mt-3">
+            <Button className="btn-custom m-2" onClick={handleShowModal}>
               Modifica
-            </button>
-            <button
-              className="btn btn-danger"
-              onClick={() => {
-                eliminaIndirizzo(indirizzo.id);
-              }}
-            >
+            </Button>
+            <Button className="btn-danger-custom m-2" onClick={handleDelete}>
               Elimina
-            </button>
+            </Button>
           </div>
         </div>
-      ))}
+        <div className="Col m-3">
+          <h4>Indirizzi Cliente</h4>
+          <PlusCircle
+            className="fs-3 plus"
+            onClick={() => {
+              setModificaIndirizzo(false);
+              setShowModalIndirizzo(true);
+            }}
+          ></PlusCircle>
+          {indirizzi.map((indirizzo, i) => (
+            <div key={i} className="address">
+              <div className="addressRow">
+                <strong>VIA:&nbsp;</strong>
+                {indirizzo.via}
+              </div>
+              <div className="addressRow">
+                <strong>Numero Civico:&nbsp;</strong>
+                {indirizzo.numeroCivico}
+              </div>
+              <div className="addressRow">
+                <strong>Località:&nbsp;</strong>
+                {indirizzo.localita}
+              </div>
+              <div className="addressRow">
+                <strong>CAP:&nbsp;</strong>
+                {indirizzo.cap}
+              </div>
+              <div className="addressRow">
+                <strong>Comune:&nbsp;</strong>
+                {indirizzo.comune.denominazione}
+              </div>
+              <div className="addressRow">
+                <strong>Tipo Indirizzo:&nbsp;</strong>
+                {indirizzo.tipoIndirizzo}
+              </div>
+              <div className="d-flex justify-content-evenly p-1">
+                <button
+                  className="btn btn-custom"
+                  onClick={() => {
+                    setComune(indirizzo.comune.id);
+                    getProvinciaByComune(indirizzo.comune.id);
+                    // console.log("comune:" + indirizzo.comune.id);
+                    setindirizzo({
+                      via: indirizzo.via,
+                      numeroCivico: indirizzo.numeroCivico,
+                      localita: indirizzo.localita,
+                      cap: indirizzo.cap,
+                      tipoIndirizzo: indirizzo.tipoIndirizzo,
+                      idComune: comune,
+                      idCliente: idCliente,
+                    });
+                    setindirizzoId(indirizzo.id);
+                    setShowModalIndirizzo(true);
+                    setModificaIndirizzo(true);
+                  }}
+                >
+                  Modifica
+                </button>
+                <button
+                  className="btn btn-danger-custom"
+                  onClick={() => {
+                    eliminaIndirizzo(indirizzo.id);
+                  }}
+                >
+                  Elimina
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
       {/* modale modifica cliente */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
