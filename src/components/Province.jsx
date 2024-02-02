@@ -48,7 +48,8 @@ export default function Province() {
         .then((response) => {
           console.log(response.status);
           if (response.status === 201) {
-            window.alert("Province Caricati Con Successo!");
+            window.alert("Province Caricate Con Successo!");
+            provinceList(0);
             setSelectedFile(null);
           } else {
             console.log("upload NO");
@@ -97,6 +98,32 @@ export default function Province() {
       .catch((err) => console.log("ERRORE!", err));
   };
 
+  function eliminaTutto() {
+    const confirmDelete = window.confirm(
+      "Sei sicuro di voler eliminare tutte le province?"
+    );
+    if (confirmDelete) {
+      fetch(`${process.env.REACT_APP_BACKEND}/province/all`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.status === 204) {
+            window.alert("province Eliminate!");
+            provinceList(0);
+          } else {
+            throw new Error("Network response was not 204");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  }
+
   return (
     <StyledProvince className="d-flex flex-column align-items-center">
       <div className="d-flex align-items-center py-1">
@@ -116,6 +143,9 @@ export default function Province() {
             </button>
           )}
         </div>
+        <button className="btn btn-danger mx-3" onClick={eliminaTutto}>
+          ELIMINA TUTTO
+        </button>
       </div>
       <table className="table">
         <thead>

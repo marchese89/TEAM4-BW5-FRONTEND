@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { PlusCircle } from "react-bootstrap-icons";
 import styled from "styled-components";
 
 const StyledDettagliCliente = styled.div`
@@ -21,6 +22,23 @@ const StyledDettagliCliente = styled.div`
     font-weight: bold;
     margin-right: 5px;
   }
+  .plus {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .address {
+    background-color: lightblue;
+    padding: 0.8em;
+    margin: 0.5em;
+    border-radius: 7px;
+  }
+  .addressRow {
+    background-color: lightgrey;
+    border-radius: 7px;
+    padding: 0.8em;
+    margin: 0.2em;
+  }
 `;
 
 function DettagliCliente() {
@@ -28,7 +46,69 @@ function DettagliCliente() {
   const [showModal, setShowModal] = useState(false);
   const [clienteModificato, setClienteModificato] = useState({});
   const { idCliente } = useParams();
+  const [indirizzi, setIndirizzi] = useState([]);
   const navigate = useNavigate();
+  const [showModalIndirizzo, setShowModalIndirizzo] = useState(false);
+  const [indirizzo, setindirizzo] = useState({
+    tipoIndirizzo: "SEDE_LEGALE",
+  });
+  const [province, setProvince] = useState([]);
+  const [provincia, setProvincia] = useState("");
+  const [comuni, setComuni] = useState([]);
+  const [comune, setComune] = useState([]);
+  const [modificaIndirizzo, setModificaIndirizzo] = useState(false);
+  const [indirizzoId, setindirizzoId] = useState();
+
+  useEffect(() => {
+    getProvince();
+  }, []);
+
+  function getProvince() {
+    fetch(`${process.env.REACT_APP_BACKEND}/province/noPage`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setProvince(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  function getComuniByProvincia(provincia) {
+    fetch(`${process.env.REACT_APP_BACKEND}/comuni/byProvincia/${provincia}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setComuni(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  const getIndirizziCliente = () => {
+    fetch(
+      `${process.env.REACT_APP_BACKEND}/indirizzi/getByIdCliente/${idCliente}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setIndirizzi(data);
+        // console.log("indirizzi");
+        // console.log(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   const caricaDettagliCliente = () => {
     fetch(`${process.env.REACT_APP_BACKEND}/cliente/${idCliente}`, {
@@ -43,6 +123,7 @@ function DettagliCliente() {
   };
   useEffect(() => {
     caricaDettagliCliente();
+    getIndirizziCliente();
   }, [idCliente]);
 
   useEffect(() => {
@@ -54,11 +135,31 @@ function DettagliCliente() {
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
+  // const handleShowModalIndirizzo = () => setShowModalIndirizzo(true);
+  const handleCloseModalIndirizzo = () => setShowModalIndirizzo(false);
+
   const handleInputChange = (e) => {
     setClienteModificato({
       ...clienteModificato,
       [e.target.name]: e.target.value,
     });
+  };
+  const handleInputChangeIndirizzo = (e) => {
+    setindirizzo({
+      ...indirizzo,
+      [e.target.name]: e.target.value,
+      // idComune: comune,
+      idCliente: idCliente,
+    });
+    if (
+      indirizzo.tipoIndirizzo === null ||
+      indirizzo.tipoIndirizzo === undefined
+    ) {
+      setindirizzo({
+        ...indirizzo,
+        tipoIndirizzo: "SEDE_LEGALE",
+      });
+    }
   };
 
   const handleSubmit = (event) => {
@@ -78,7 +179,7 @@ function DettagliCliente() {
         return response.json();
       })
       .then((data) => {
-        console.log("Dati aggiornati:", data);
+        // console.log("Dati aggiornati:", data);
         setCliente(data);
         handleCloseModal();
         caricaDettagliCliente();
@@ -87,6 +188,35 @@ function DettagliCliente() {
         console.error("Error:", error);
       });
   };
+
+  function inserisciIndirizzo(event) {
+    event.preventDefault();
+    fetch(`${process.env.REACT_APP_BACKEND}/indirizzi`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+      body: JSON.stringify(indirizzo),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status === 401) {
+          window.alert("Non puoi inserire due indirizzi con lo stesso tipo!");
+        } else {
+          throw new Error("Network response was not ok");
+        }
+      })
+      .then((data) => {
+        handleCloseModalIndirizzo();
+        getIndirizziCliente();
+        setindirizzo({});
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   const handleDelete = () => {
     const confirmDelete = window.confirm(
@@ -111,6 +241,80 @@ function DettagliCliente() {
         });
     }
   };
+
+  const eliminaIndirizzo = (idIndirizzo) => {
+    const confirmDelete = window.confirm(
+      "Sei sicuro di voler eliminare questo indirizzo?"
+    );
+    if (confirmDelete) {
+      fetch(`${process.env.REACT_APP_BACKEND}/indirizzi/${idIndirizzo}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.status === 204) {
+            getIndirizziCliente();
+          } else {
+            throw new Error("Network response was not 204");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  };
+
+  function getProvinciaByComune(idComune) {
+    fetch(`${process.env.REACT_APP_BACKEND}/comuni/idProvincia/${idComune}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Network response was not ok");
+        }
+      })
+      .then((data) => {
+        setProvincia(data.id);
+        getComuniByProvincia(data.id);
+        setComune(idComune);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
+  function modificaIndirizzoAction() {
+    fetch(`${process.env.REACT_APP_BACKEND}/indirizzi/${indirizzoId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+      body: JSON.stringify(indirizzo),
+    })
+      .then((response) => {
+        if (response.ok) {
+          handleCloseModalIndirizzo();
+          getIndirizziCliente();
+          setindirizzo({});
+        } else {
+          window.alert("Ci sono stati problemi, indirizzo non modificato");
+          throw new Error("Network response was not ok");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   if (!cliente) {
     return (
@@ -160,7 +364,75 @@ function DettagliCliente() {
           Elimina
         </Button>
       </div>
-
+      <h4>Indirizzi Cliente</h4>
+      <PlusCircle
+        className="fs-3 plus"
+        onClick={() => {
+          setModificaIndirizzo(false);
+          setShowModalIndirizzo(true);
+        }}
+      ></PlusCircle>
+      {indirizzi.map((indirizzo, i) => (
+        <div key={i} className="address">
+          <div className="addressRow">
+            <strong>VIA:&nbsp;</strong>
+            {indirizzo.via}
+          </div>
+          <div className="addressRow">
+            <strong>Numero Civico:&nbsp;</strong>
+            {indirizzo.numeroCivico}
+          </div>
+          <div className="addressRow">
+            <strong>Località:&nbsp;</strong>
+            {indirizzo.localita}
+          </div>
+          <div className="addressRow">
+            <strong>CAP:&nbsp;</strong>
+            {indirizzo.cap}
+          </div>
+          <div className="addressRow">
+            <strong>Comune:&nbsp;</strong>
+            {indirizzo.comune.denominazione}
+          </div>
+          <div className="addressRow">
+            <strong>Tipo Indirizzo:&nbsp;</strong>
+            {indirizzo.tipoIndirizzo}
+          </div>
+          <div className="d-flex justify-content-evenly p-1">
+            <button
+              className="btn btn-warning"
+              onClick={() => {
+                setComune(indirizzo.comune.id);
+                getProvinciaByComune(indirizzo.comune.id);
+                // console.log("comune:" + indirizzo.comune.id);
+                setindirizzo({
+                  via: indirizzo.via,
+                  numeroCivico: indirizzo.numeroCivico,
+                  localita: indirizzo.localita,
+                  cap: indirizzo.cap,
+                  tipoIndirizzo: indirizzo.tipoIndirizzo,
+                  idComune: comune,
+                  idCliente: idCliente,
+                });
+                setindirizzoId(indirizzo.id);
+                setShowModalIndirizzo(true);
+                setModificaIndirizzo(true);
+              }}
+            >
+              Modifica
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                eliminaIndirizzo(indirizzo.id);
+              }}
+            >
+              Elimina
+            </button>
+          </div>
+        </div>
+      ))}
+      {/* modale modifica cliente */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Modifica Cliente</Modal.Title>
@@ -256,6 +528,130 @@ function DettagliCliente() {
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
             Salva Modifiche
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* modale indirizzo */}
+      <Modal show={showModalIndirizzo} onHide={handleCloseModalIndirizzo}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {modificaIndirizzo === false
+              ? "Nuovo Indirizzo"
+              : "Modifica Indirizzo"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Via</Form.Label>
+              <Form.Control
+                type="text"
+                name="via"
+                value={indirizzo.via || ""}
+                onChange={handleInputChangeIndirizzo}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Numero Civico</Form.Label>
+              <Form.Control
+                type="text"
+                name="numeroCivico"
+                value={indirizzo.numeroCivico || ""}
+                onChange={handleInputChangeIndirizzo}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Località</Form.Label>
+              <Form.Control
+                type="text"
+                name="localita"
+                value={indirizzo.localita || ""}
+                onChange={handleInputChangeIndirizzo}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>CAP</Form.Label>
+              <Form.Control
+                type="number"
+                name="cap"
+                maxLength={5}
+                minLength={5}
+                value={indirizzo.cap || ""}
+                onChange={handleInputChangeIndirizzo}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Provincia</Form.Label>
+              <Form.Select
+                name="provincia"
+                value={provincia}
+                onChange={(e) => {
+                  getComuniByProvincia(e.target.value);
+                  setProvincia(e.target.value);
+                }}
+              >
+                <option></option>
+                {province.map((provincia, i) => (
+                  <option value={provincia.id} key={i}>
+                    {provincia.provincia}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Comune</Form.Label>
+              <Form.Select
+                name="idComune"
+                value={comune}
+                required
+                onChange={(e) => {
+                  setComune(e.target.value);
+                  handleInputChangeIndirizzo(e);
+                }}
+              >
+                <option></option>
+                {comuni.map((comune, i) => (
+                  <option value={comune.id} key={i}>
+                    {comune.denominazione}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            {modificaIndirizzo === false && (
+              <Form.Select
+                name="tipoIndirizzo"
+                value={indirizzo.tipoIndirizzo}
+                onChange={handleInputChangeIndirizzo}
+              >
+                <option>SEDE_LEGALE</option>
+                <option>SEDE_OPERATIVA</option>
+              </Form.Select>
+            )}
+            {modificaIndirizzo === true && (
+              <div className="d-flex flex-column">
+                <div>Tipo Indirizzo</div>
+                <span>
+                  <strong>{indirizzo.tipoIndirizzo}</strong>
+                </span>
+              </div>
+            )}
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModalIndirizzo}>
+            Chiudi
+          </Button>
+          <Button
+            variant="primary"
+            onClick={
+              modificaIndirizzo === false
+                ? inserisciIndirizzo
+                : modificaIndirizzoAction
+            }
+          >
+            {modificaIndirizzo === false
+              ? "Inserisci Indirizzo"
+              : "Modifica Indirizzo"}
           </Button>
         </Modal.Footer>
       </Modal>
