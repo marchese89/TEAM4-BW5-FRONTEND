@@ -45,6 +45,7 @@ const StyledDettagliCliente = styled.div`
   .btn-danger-custom:hover {
     background-color: #dc3545;
     color: white;
+  }
   .plus {
     &:hover {
       cursor: pointer;
