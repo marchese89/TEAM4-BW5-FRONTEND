@@ -357,7 +357,7 @@ export default function Clienti() {
                 <td>{cliente.id}</td>
                 <td>
                   {cliente.ragioneSociale}{" "}
-                  <div>
+                  {/* <div>
                     SEDE LEGALE:{" "}
                     {cliente.indirizzi &&
                     cliente.indirizzi.some(
@@ -368,7 +368,7 @@ export default function Clienti() {
                             indirizzo.tipoIndirizzo === "SEDE_LEGALE"
                         ).comune.provincia.sigla
                       : ""}
-                  </div>
+                  </div> */}
                 </td>
                 <td className="align-middle text-center">
                   {cliente.partitaIva}

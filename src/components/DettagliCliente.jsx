@@ -608,7 +608,7 @@ function DettagliCliente() {
               <Form.Label>Provincia</Form.Label>
               <Form.Select
                 name="provincia"
-                // value={provincia}
+                value={provincia}
                 onChange={(e) => {
                   getComuniByProvincia(e.target.value);
                   setProvincia(e.target.value);
@@ -626,7 +626,7 @@ function DettagliCliente() {
               <Form.Label>Comune</Form.Label>
               <Form.Select
                 name="idComune"
-                // value={comune}
+                value={comune}
                 required
                 onChange={(e) => {
                   setComune(e.target.value);
