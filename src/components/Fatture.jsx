@@ -5,6 +5,10 @@ import styled from "styled-components";
 
 
 const StyledFatture = styled.div`
+
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+
   height: 100%;
   .link {
     padding: 0 1em;
