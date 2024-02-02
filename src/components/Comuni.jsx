@@ -23,6 +23,12 @@ const StyledComuni = styled.div`
       border: 1px solid #03989e;
     }
   }
+  .link.selected {
+    color: #03989e;
+    background-color: white;
+    font-weight: bold;
+    border: 1px solid #03989e;
+  }
   .pages {
     align-items: flex-end;
   }
@@ -75,6 +81,7 @@ export default function Comuni() {
   const [maxPage, setMaxPage] = useState(1);
   const [pageNumber, setPageNumber] = useState(0);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [selectedPage, setSelectedPage] = useState(0);
 
   function uploadComuni() {
     if (selectedFile) {
@@ -137,6 +144,7 @@ export default function Comuni() {
         }
         setPagine(array);
         setComuni(data.content);
+        setSelectedPage(page);
       })
 
       .catch((err) => console.log("ERRORE!", err));
@@ -219,7 +227,7 @@ export default function Comuni() {
         {pagine.map((pagina, i) => (
           <span
             key={i}
-            className="link"
+            className={`link ${selectedPage === pagina ? "selected" : ""}`}
             onClick={() => {
               comuniList(i);
             }}

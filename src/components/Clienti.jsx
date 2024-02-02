@@ -22,6 +22,12 @@ const StyledClienti = styled.div`
       color: #03989e;
     }
   }
+  .link.selected {
+    color: #03989e;
+    background-color: white;
+    font-weight: bold;
+    border: 1px solid #03989e;
+  }
   .pages {
     align-items: flex-end;
   }
@@ -95,6 +101,7 @@ export default function Clienti() {
   const [maxPage, setMaxPage] = useState(1);
   const [pageNumber, setPageNumber] = useState(0);
   const [filterOn, setFilterOn] = useState(null);
+  const [selectedPage, setSelectedPage] = useState(0);
 
   const handleNuovoCliente = () => {
     setShowModal(true);
@@ -244,6 +251,7 @@ export default function Clienti() {
           setPagine(array);
           console.log(data);
           setClienti(data.content);
+          setSelectedPage(page);
         } else {
           throw new Error("Invalid data structure");
         }
@@ -629,7 +637,7 @@ export default function Clienti() {
         {pagine.map((pagina, i) => (
           <span
             key={i}
-            className="link"
+            className={`link ${selectedPage === pagina ? "selected" : ""}`}
             onClick={(e) => {
               // if (sortBy === null && filterOn === null) {
               //   clientiList(i);
