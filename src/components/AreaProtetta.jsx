@@ -97,6 +97,9 @@ export default function AreaProtetta() {
             className={
               location.pathname === "/area_protetta/fatture" ? "selected" : ""
             }
+            onClick={() => {
+              navigate("./fatture");
+            }}
           >
             Fatture
           </li>
