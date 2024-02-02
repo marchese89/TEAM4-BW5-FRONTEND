@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledLogin = styled.div`
-  background-color: #03989e33;
+  background-color: #ffffffec;
+  border: 2px solid #03999ec6;
   border-radius: 40px;
   margin: 1em;
   padding: 2em;

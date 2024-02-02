@@ -3,7 +3,8 @@ import { Button, Form, InputGroup } from "react-bootstrap";
 import styled from "styled-components";
 
 const StyledRegister = styled.div`
-  background-color: #03989e33;
+  background-color: #ffffffec;
+  border: 2px solid #03999ec6;
   border-radius: 40px;
   display: flex;
   align-items: center;
