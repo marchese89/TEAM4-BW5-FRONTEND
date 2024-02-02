@@ -66,13 +66,13 @@ export default function AreaProtetta() {
           >
             Clienti
           </li>
-          <li
+          {/* <li
             className={
               location.pathname === "/area_protetta/indirizzi" ? "selected" : ""
             }
           >
             Indirizzi
-          </li>
+          </li> */}
           <li
             className={
               location.pathname === "/area_protetta/province" ? "selected" : ""
