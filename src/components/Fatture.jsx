@@ -54,8 +54,7 @@ export default function Fatture(){
     setShowModal(false);  // Chiudiamo il modal impostando lo stato a false
   };
 
-  const handleShow = (statoFattura, fattura) => {
-    setNuovoStatoFattura(statoFattura);
+  const handleShow = (fattura) => {
     setSelectedFattura(fattura);
     setShowModal(true);  // Apriamo il modal impostando lo stato a true
   };
@@ -325,7 +324,7 @@ export default function Fatture(){
                 <th scope="row">{fattura.numero}</th>
                 <th scope="row">
                   {fattura.statoFattura}
-                  <Button variant="primary" onClick={() => handleShow(fattura.statoFattura, fattura)}>
+                  <Button variant="primary" onClick={() => handleShow(fattura.id)}>
                     Modifica
 
         <Modal show={showModal} onHide={handleClose}>
