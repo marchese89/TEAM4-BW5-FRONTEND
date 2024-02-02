@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, Modal, Table } from "react-bootstrap";
-import { Form, Link, useParams } from "react-router-dom";
+import { Button, Form, Modal, Table } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Clienti from "./Clienti";
 
@@ -42,48 +42,39 @@ button {
 
 export default function Fatture(){
   const [fattura, setFattura] = useState([]);
-  const [nuovoStatoFattura, setNuovoStatoFattura] = useState("");
+  const [nuovaFattura, setNuovaFattura] = useState([]);
+  const [nuovoStatoFattura, setNuovoStatoFattura] = useState([]);
   const [selectedFattura, setSelectedFattura] = useState(null);
 
+  const [showModal, setShowModal] = useState(false);
 
-  const [showModal, setShowModal] = useState(false);  // Usiamo un solo stato per controllare la visibilità del modal
+  const [showOne, setShowOne] = useState(false);
+  const [showTwo, setShowTwo] = useState(false);
 
-  const handleClose = () => {
-    setNuovoStatoFattura("");
-    setSelectedFattura(null);
-    setShowModal(false);  // Chiudiamo il modal impostando lo stato a false
-  };
+  const handleCloseOne = () => setShowOne(false);
+  const handleCloseTwo = () => setShowTwo(false);
 
-  const handleShow = (fattura) => {
-    setSelectedFattura(fattura);
-    setShowModal(true);  // Apriamo il modal impostando lo stato a true
-  };
-
-  const [nuovaFattura, setNuovaFattura] = useState({
-    data: "",
-    importo: "",
-    numero: "",
-    statoFattura: ""
-  });
+  const handleShowOne = () => setShowOne(true);
+  const handleShowTwo = () => setShowTwo(true);
 
 
   const handleInputChange = (e) => {
-    setNuovoStatoFattura({
-      ...nuovoStatoFattura,
+    setNuovaFattura({
+      ...nuovaFattura,
       [e.target.name]: e.target.value,
     });
   };
 
-
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const creaFatturaAndClose =()=>{
+    creaFattura();
+    handleCloseOne();
   }
 
-  /*const handleShow = (statoFattura, fattura) => {
-    setNuovoStatoFattura(statoFattura);
-    setSelectedFattura(fattura);
-    setShow(true);
-  }; */
+  const handleSaveAndClose = () => {
+    handleSave();
+    handleCloseTwo();
+  };
+
 
   const {idCliente} = useParams()
 
@@ -177,12 +168,16 @@ export default function Fatture(){
       });
   };
 
+
   const handleSave = () => {
     if (!selectedFattura) {
       console.error("Nessuna fattura selezionata.");
       return;
     }
+  
+    console.log("Valore nuovoStatoFattura:", nuovoStatoFattura);
 
+  
     fetch(`${process.env.REACT_APP_BACKEND}/fatture/${selectedFattura.id}`, {
       method: "PUT",
       headers: {
@@ -200,15 +195,20 @@ export default function Fatture(){
             f.id === selectedFattura.id ? updatedFattura : f
           );
           setFattura(updatedFatture);
-          handleClose();
         } else {
           throw new Error("Errore durante l'aggiornamento dello stato della fattura");
         }
       })
       .catch((err) => {
         console.error("Errore durante la richiesta API:", err);
+      })
+      .finally(() => {
+        handleCloseTwo(); 
       });
   };
+
+
+
 
   useEffect(() => {
     handleSubmit();
@@ -222,20 +222,20 @@ export default function Fatture(){
         <div className="d-flex align-items-center py-1">
           <h5 className="text-center mx-2">Lista Fatture</h5>
 
-        <Button variant="primary" onClick={handleShow}>
-        Crea nuova fattura
+        <Button variant="primary"  onClick={handleShowOne}>
+        Inserisci una nuova fattura
       </Button>
-
         </div>
-{/*  
 
-      <Modal show={showModal} onHide={handleCloseModal}>
+
+
+        <Modal show={showOne} onHide={handleCloseOne}>
         <Modal.Header closeButton>
-          <Modal.Title>Fattura</Modal.Title>
+          <Modal.Title>Nuova fattura</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
+
+            <Form.Group className="mb-3" onSubmit={handleSubmit}>
               <Form.Label>Data</Form.Label>
               <Form.Control
                 type="text"
@@ -265,13 +265,12 @@ export default function Fatture(){
             </Form.Group>
 
 
-
             <Form.Group className="mb-3">
               <Form.Label>Stato fattura</Form.Label>
               <Form.Select
                 name="stato"
-                value={nuovoStatoFattura}
-                onChange={(e) => setNuovoStatoFattura(e.target.value)}
+                value={nuovaFattura}
+                onChange={(e) => setNuovaFattura(e.target.value)}
               >
                 <option value="">Seleziona lo stato fattura</option>
       <option value="1">BOZZA</option>
@@ -286,20 +285,21 @@ export default function Fatture(){
       <option value="2">ARCHIVIATA</option>
               </Form.Select>
             </Form.Group>
-            <Button
-              variant="secondary"
-              onClick={handleCloseModal}
-              className="me-2"
-            >
-              Chiudi
-            </Button>
-            <Button variant="primary" type="submit">
-              Salva
-            </Button>
-          </Form>
+
         </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseOne}>
+            Chiudi
+          </Button>
+          <Button variant="primary" onClick={creaFatturaAndClose}>
+            Salva
+          </Button>
+        </Modal.Footer>
       </Modal>
-*/}
+
+
+
+
         <table className="table">
           <thead>
             <tr>
@@ -324,21 +324,30 @@ export default function Fatture(){
                 <th scope="row">{fattura.numero}</th>
                 <th scope="row">
                   {fattura.statoFattura}
-                  <Button variant="primary" onClick={() => handleShow(fattura.id)}>
+                  <Button variant="primary" onClick={() => handleShowTwo(fattura.id)}>
                     Modifica
+                  </Button>
 
-        <Modal show={showModal} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Stato fattura</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Select aria-label="Default select example"
-         value={nuovoStatoFattura}
-         onChange={(e) =>
-           setNuovoStatoFattura(e.target.value)
-         }
+                </th>
+                             </tr>
+           ))} 
+
+          </tbody>
+        </table>
+
+      <Modal show={showTwo} onHide={handleCloseTwo}>
+        <Modal.Header closeButton>
+          <Modal.Title>Stato fattura</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+        <Form.Select aria-label="Default select example"
+  value={nuovoStatoFattura}
+  onChange={(e) => setNuovoStatoFattura(e.target.value)}
         >
-      <option>Stati fatture</option>
+  <option value="" disabled>
+    Seleziona uno stato
+  </option>
       <option value="1">BOZZA</option>
       <option value="2">DA APPROVARE</option>
       <option value="3">PAGATA</option>
@@ -352,26 +361,19 @@ export default function Fatture(){
 
        </Form.Select> 
  
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Chiudi
-            </Button>
-            <Button variant="primary" onClick={handleSave}>
-              Salva
-            </Button>
-          </Modal.Footer>
-        </Modal>
 
 
 
-                  </Button>
-                </th>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseTwo}>
+            Chiudi
+          </Button>
+          <Button variant="primary" onClick={handleSaveAndClose}>
+            Salva
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       </StyledFatture>
     </>
