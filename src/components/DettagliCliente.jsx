@@ -13,6 +13,7 @@ const StyledDettagliCliente = styled.div`
   width: 60%;
   h2 {
     text-align: center;
+    color: #03989e;
   }
   .dettaglio {
     margin: 10px 0;
@@ -21,6 +22,29 @@ const StyledDettagliCliente = styled.div`
   .label {
     font-weight: bold;
     margin-right: 5px;
+  }
+  .btn-custom {
+    background-color: white;
+    border: 1px solid #4caf50;
+    color: #4caf50;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 20px;
+  }
+
+  .btn-custom:hover {
+    background-color: #4caf50;
+    color: white;
+  }
+  .btn-danger-custom {
+    background-color: white;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    border-radius: 20px;
+  }
+
+  .btn-danger-custom:hover {
+    background-color: #dc3545;
+    color: white;
   }
   .plus {
     &:hover {
@@ -357,10 +381,10 @@ function DettagliCliente() {
       </div>
 
       <div className="mt-3">
-        <Button variant="success" className="m-2" onClick={handleShowModal}>
+        <Button className="btn-custom m-2" onClick={handleShowModal}>
           Modifica
         </Button>
-        <Button variant="danger" className="m-2" onClick={handleDelete}>
+        <Button className="btn-danger-custom m-2" onClick={handleDelete}>
           Elimina
         </Button>
       </div>

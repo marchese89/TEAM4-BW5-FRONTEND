@@ -43,8 +43,8 @@ const StyledClienti = styled.div`
   }
   .btn-custom {
     background-color: white;
-    border: 1px solid #2196f3;
-    color: #2196f3;
+    border: 1px solid #03989e;
+    color: #03989e;
     transition: background-color 0.3s, color 0.3s;
     border-radius: 20px;
   }
@@ -53,22 +53,14 @@ const StyledClienti = styled.div`
     margin-bottom: 3px;
   }
 
-  /* Stile al passaggio del mouse */
   .btn-custom:hover {
-    background-color: #2196f3;
+    background-color: #03989e;
     color: white;
   }
+  .lista {
+    color: #7ed957;
+  }
 `;
-
-// background-color: grey;
-// display: flex;
-// align-items: center;
-// justify-content: center;
-// margin: 0 auto;
-// flex-direction: column;
-// width: 60%;
-// h3 {
-//   text-align: center;
 
 export default function Clienti() {
   const [clienti, setClienti] = useState([]);
@@ -264,7 +256,7 @@ export default function Clienti() {
   return (
     <StyledClienti className="d-flex flex-column align-items-center">
       <div className="title d-flex ms-2">
-        <h3 className="text-center me-3">Lista Clienti</h3>
+        <h3 className="lista text-center me-3">Lista Clienti</h3>
         {/* <Button variant="primary" onClick={handleNuovoCliente} className="mb-3">
           Nuovo Cliente
         </Button> */}

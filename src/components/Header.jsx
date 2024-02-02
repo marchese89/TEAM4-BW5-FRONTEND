@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import logo from "../image/logo2.png";
 import styled from "styled-components";
 
 const StyledHeader = styled.div`
-  background-color: lightgrey;
   position: relative;
   h1 {
     font-size: 2.5em;
@@ -36,6 +36,9 @@ const StyledHeader = styled.div`
     right: 1em;
     top: 0.5em;
   }
+  .logo {
+    height: 80px;
+  }
 `;
 
 export default function Header() {
@@ -49,13 +52,11 @@ export default function Header() {
 
   return (
     <StyledHeader>
-      <h1
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        Azienda Energia
-      </h1>
+      <img
+        src={logo}
+        alt="Logo Azienda Energia"
+        onClick={() => navigate("/")}
+      />
       <div
         className={
           location.pathname === "/" &&
